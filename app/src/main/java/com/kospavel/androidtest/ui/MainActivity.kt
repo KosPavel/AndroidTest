@@ -1,7 +1,8 @@
-package com.kospavel.androidtest
+package com.kospavel.androidtest.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.kospavel.androidtest.R
 
 class MainActivity : AppCompatActivity() {
 

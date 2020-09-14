@@ -1,32 +1,30 @@
 package com.kospavel.androidtest.ui.mainfeed
 
-import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.gson.GsonBuilder
-import com.kospavel.androidtest.ui.mainfeed.mainfeedrepository.api.MainFeedApi
-import com.kospavel.androidtest.ui.mainfeed.mainfeedrepository.api.model.MainFeedResponse
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
+import com.kospavel.androidtest.ui.mainfeed.mainfeedrepository.MainFeedRepositoryImpl
+import com.kospavel.androidtest.ui.mainfeed.mainfeedrepository.MainFeedResponseStatus
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 class MainFeedViewModel : ViewModel() {
 
-    private val mainFeedApi = Retrofit.Builder().baseUrl("https://www.reddit.com/")
-        .addConverterFactory(
-            GsonConverterFactory.create(
-                GsonBuilder().setLenient().create()
-            )
-        )
-        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-        .build().create<MainFeedApi>()
+    private val repo = MainFeedRepositoryImpl()
+    private val _uiStructure = MutableLiveData<List<Any>>(emptyList())
+    val uiStructure: LiveData<List<Any>> = _uiStructure
 
-    fun best(): Observable<MainFeedResponse> {
-        return mainFeedApi.best().subscribeOn(Schedulers.io()).doOnError {
-            Log.i("qwerty", it.toString())
-        }
+    fun fetchMainFeed() {
+        repo.getFeed()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                when (it) {
+                    is MainFeedResponseStatus.Ok -> {
+                        _uiStructure.value = it.posts
+                    }
+                    is MainFeedResponseStatus.Error -> {
+                        _uiStructure.value = emptyList()
+                    }
+                }
+            }
     }
-
 }

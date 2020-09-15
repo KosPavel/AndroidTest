@@ -9,12 +9,12 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 class MainFeedViewModel : ViewModel() {
 
-    private val repo = MainFeedRepositoryImpl()
+    private val mainFeedRepository = MainFeedRepositoryImpl()
     private val _uiStructure = MutableLiveData<List<Any>>(emptyList())
     val uiStructure: LiveData<List<Any>> = _uiStructure
 
     fun fetchMainFeed() {
-        repo.getFeed()
+        mainFeedRepository.getFeed()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 when (it) {

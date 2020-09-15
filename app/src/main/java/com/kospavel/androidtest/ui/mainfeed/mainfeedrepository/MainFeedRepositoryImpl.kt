@@ -30,7 +30,8 @@ class MainFeedRepositoryImpl : MainFeedRepository {
                 for (children in it.data.children) {
                     list.add(
                         Post(
-                            author = children.data.author
+                            author = children.data.author,
+                            title = children.data.title
                         )
                     )
                 }

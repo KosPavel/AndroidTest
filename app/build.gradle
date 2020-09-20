@@ -65,6 +65,5 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation "com.squareup.retrofit2:converter-gson:$gson_version"
 
-    implementation "com.hannesdorfmann:adapterdelegates4-kotlin-dsl:$delegates_version"
-    implementation "com.hannesdorfmann:adapterdelegates4-kotlin-dsl-layoutcontainer:$delegates_version"
+    implementation "com.squareup.picasso:picasso:$picasso_version"
 }

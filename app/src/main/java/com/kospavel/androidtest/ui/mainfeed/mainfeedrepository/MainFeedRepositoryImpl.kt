@@ -31,7 +31,8 @@ class MainFeedRepositoryImpl : MainFeedRepository {
                     list.add(
                         Post(
                             author = children.data.author,
-                            title = children.data.title
+                            title = children.data.title,
+                            url = children.data.url
                         )
                     )
                 }

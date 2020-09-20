@@ -16,9 +16,6 @@ class MainFeedFragment : Fragment(R.layout.fragment_main_feed) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        val feedAdapter = ListDelegationAdapter(
-//            postAdapterDelegate()
-//        )
         val feedAdapter = FeedAdapter()
 
         feed_recycler_view.apply {

@@ -11,15 +11,11 @@
         android:layout_height="wrap_content"
         app:cardElevation="4dp">
 
-        <TextView
-            android:id="@+id/post_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <ImageView
-            android:id="@+id/image"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/card_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
     </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

@@ -4,8 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
+import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import com.kospavel.androidtest.R
-import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.item_post_title_view.*
 import kotlinx.android.synthetic.main.item_post_view.view.*
 
 class FeedAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -17,7 +19,7 @@ class FeedAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
             is NoPosts -> 1
-            is RawPostData -> 2
+            is BasePost -> 2
             else -> 0
         }
     }
@@ -47,13 +49,11 @@ class FeedAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
             2 -> {
-                val post = items[position] as RawPostData
-                holder.itemView.post_title.text = post.title
-                if (post.url.contains(regex = Regex("jpg|gif|png"))) {
-                    Picasso.get().load(post.url).into(holder.itemView.image)
-                } else {
-                    holder.itemView.image.setImageResource(0)
-                }
+                val adapter = ListDelegationAdapter(
+                    titleAdapterDelegate()
+                )
+                adapter.items = items[position]
+                holder.itemView.card_recycler_view.adapter = adapter
             }
         }
     }
@@ -64,3 +64,11 @@ class FeedAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     class UnknownPostTypeViewHolder(viewGroup: ViewGroup) : RecyclerView.ViewHolder(viewGroup)
 }
+
+fun titleAdapterDelegate() = adapterDelegateLayoutContainer<Title, Any>(R.layout.item_post_title_view) {
+    bind {
+        title.text = item.title
+    }
+}
+
+//TODO продумать структуру, передачу данных из одного ресайклера в другой

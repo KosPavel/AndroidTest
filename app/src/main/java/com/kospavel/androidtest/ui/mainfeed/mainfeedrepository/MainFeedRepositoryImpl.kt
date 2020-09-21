@@ -1,7 +1,7 @@
 package com.kospavel.androidtest.ui.mainfeed.mainfeedrepository
 
 import com.google.gson.GsonBuilder
-import com.kospavel.androidtest.ui.mainfeed.Post
+import com.kospavel.androidtest.ui.mainfeed.RawPostData
 import com.kospavel.androidtest.ui.mainfeed.mainfeedrepository.api.MainFeedApi
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -26,10 +26,10 @@ class MainFeedRepositoryImpl : MainFeedRepository {
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
             .map<MainFeedResponseStatus> {
-                val list = mutableListOf<Post>()
+                val list = mutableListOf<RawPostData>()
                 for (children in it.data.children) {
                     list.add(
-                        Post(
+                        RawPostData(
                             author = children.data.author,
                             title = children.data.title,
                             url = children.data.url

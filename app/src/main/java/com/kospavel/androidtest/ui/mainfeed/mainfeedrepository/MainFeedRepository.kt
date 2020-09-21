@@ -1,6 +1,6 @@
 package com.kospavel.androidtest.ui.mainfeed.mainfeedrepository
 
-import com.kospavel.androidtest.ui.mainfeed.Post
+import com.kospavel.androidtest.ui.mainfeed.RawPostData
 import io.reactivex.rxjava3.core.Observable
 
 interface MainFeedRepository {
@@ -10,6 +10,6 @@ interface MainFeedRepository {
 }
 
 sealed class MainFeedResponseStatus {
-    class Ok(val posts: List<Post>) : MainFeedResponseStatus()
+    class Ok(val rawPostData: List<RawPostData>) : MainFeedResponseStatus()
     class Error(val e: Throwable) : MainFeedResponseStatus()
 }

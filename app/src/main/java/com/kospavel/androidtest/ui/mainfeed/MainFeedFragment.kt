@@ -1,7 +1,6 @@
 package com.kospavel.androidtest.ui.mainfeed
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -24,12 +23,17 @@ class MainFeedFragment : Fragment(R.layout.fragment_main_feed) {
             adapter = feedAdapter
         }
 
-        vm.fetchMainFeed()
-        vm.uiStructure.observeForever {
-            Log.i("qwerty", it.size.toString())
-            Log.i("qwerty", it.toString())
-            feedAdapter.items = it
-            feedAdapter.notifyDataSetChanged()
+        vm.apply {
+            fetchMainFeed()
+            uiStructure.observeForever {
+                feedAdapter.items = it
+                feedAdapter.notifyDataSetChanged()
+                swipe_container.isRefreshing = false
+            }
+        }
+
+        swipe_container.setOnRefreshListener {
+            vm.reloadFeed()
         }
     }
 }

@@ -19,12 +19,17 @@ class MainFeedViewModel : ViewModel() {
             .subscribe {
                 when (it) {
                     is MainFeedResponseStatus.Ok -> {
-                        _uiStructure.value = it.posts
+                        _uiStructure.value = it.rawPostData
                     }
                     is MainFeedResponseStatus.Error -> {
-                        _uiStructure.value = emptyList()
+                        _uiStructure.value = listOf(NoPosts())
                     }
                 }
             }
+    }
+
+    fun reloadFeed() {
+        _uiStructure.value = emptyList()
+        fetchMainFeed()
     }
 }

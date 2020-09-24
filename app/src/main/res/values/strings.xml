@@ -2,4 +2,5 @@
     <string name="app_name">AndroidTest</string>
     <string name="something_went_wrong">Что-то пошло не так</string>
     <string name="unknown_post_type">Тип поста неизвестен</string>
+    <string name="author">Автор:</string>
 </resources>

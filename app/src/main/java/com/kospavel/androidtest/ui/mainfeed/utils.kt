@@ -9,9 +9,11 @@ data class RawPostData(
 class NoPosts
 
 data class Title(val title: String)
+data class Author(val author: String)
 
-open class BasePost(
-    val title: Title
-)
+abstract class BasePost(
+) {
+    abstract var items: List<Any>
+}
 
-class Post(title: Title): BasePost(title)
+class Post(override var items: List<Any>): BasePost()

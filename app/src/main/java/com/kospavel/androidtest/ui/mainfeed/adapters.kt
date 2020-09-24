@@ -3,10 +3,12 @@ package com.kospavel.androidtest.ui.mainfeed
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import com.kospavel.androidtest.R
+import kotlinx.android.synthetic.main.item_author_view.*
 import kotlinx.android.synthetic.main.item_post_title_view.*
 import kotlinx.android.synthetic.main.item_post_view.view.*
 
@@ -49,14 +51,20 @@ class FeedAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
             2 -> {
-                val adapter = ListDelegationAdapter(
-                    titleAdapterDelegate()
+                val listAdapter = ListDelegationAdapter(
+                    titleAdapterDelegate(),
+                    authorAdapterDelegate()
                 )
-                adapter.items = items[position]
-                holder.itemView.card_recycler_view.adapter = adapter
+                val post = items[position] as BasePost
+                holder.itemView.card_recycler_view.apply {
+                    layoutManager = LinearLayoutManager(context)
+                    adapter = listAdapter
+                }
+                listAdapter.items = post.items
             }
         }
     }
+
 
     class FeedViewHolder(viewGroup: ViewGroup) : RecyclerView.ViewHolder(viewGroup)
 
@@ -65,10 +73,16 @@ class FeedAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class UnknownPostTypeViewHolder(viewGroup: ViewGroup) : RecyclerView.ViewHolder(viewGroup)
 }
 
-fun titleAdapterDelegate() = adapterDelegateLayoutContainer<Title, Any>(R.layout.item_post_title_view) {
-    bind {
-        title.text = item.title
+fun titleAdapterDelegate() =
+    adapterDelegateLayoutContainer<Title, Any>(R.layout.item_post_title_view) {
+        bind {
+            title.text = item.title
+        }
     }
-}
 
-//TODO продумать структуру, передачу данных из одного ресайклера в другой
+fun authorAdapterDelegate() =
+    adapterDelegateLayoutContainer<Author, Any>(R.layout.item_author_view) {
+        bind {
+            author.text = item.author
+        }
+    }

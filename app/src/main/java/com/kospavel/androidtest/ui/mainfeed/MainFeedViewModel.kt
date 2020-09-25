@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.kospavel.androidtest.ui.mainfeed.mainfeedrepository.MainFeedRepositoryImpl
 import com.kospavel.androidtest.ui.mainfeed.mainfeedrepository.MainFeedResponseStatus
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class MainFeedViewModel : ViewModel() {
 
@@ -15,16 +16,21 @@ class MainFeedViewModel : ViewModel() {
 
     fun fetchMainFeed() {
         mainFeedRepository.getFeed()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.computation())
             .map {
-                when (it) {
+                val structure = when (it) {
                     is MainFeedResponseStatus.Ok -> {
-                        _uiStructure.value = setStructure(it.rawPostData)
+                        setStructure(it.rawPostData)
                     }
                     is MainFeedResponseStatus.Error -> {
-                        _uiStructure.value = listOf(NoPosts())
+                        listOf(NoPosts())
                     }
                 }
+                structure
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .map {
+                _uiStructure.value = it
             }
             .subscribe()
     }
@@ -45,6 +51,5 @@ class MainFeedViewModel : ViewModel() {
     fun reloadFeed() {
         _uiStructure.value = emptyList()
         fetchMainFeed()
-//        setStructure().subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread()).subscribe()
     }
 }

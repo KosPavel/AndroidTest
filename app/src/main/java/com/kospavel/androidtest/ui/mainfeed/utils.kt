@@ -17,3 +17,11 @@ abstract class BasePost(
 }
 
 class Post(override var items: List<Any>): BasePost()
+
+enum class POST_TYPE {
+    IMAGE,
+    TITLE_ONLY,
+    TEXT,
+    GIF,
+    VIDEO
+}

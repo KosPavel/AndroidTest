@@ -10,18 +10,20 @@ class NoPosts
 
 data class Title(val title: String)
 data class Author(val author: String)
+data class Image(val downloadUrl: String)
 
 abstract class BasePost(
 ) {
     abstract var items: List<Any>
 }
 
-class Post(override var items: List<Any>): BasePost()
+class Post(override var items: List<Any>) : BasePost()
 
-enum class POST_TYPE {
+enum class PostType {
     IMAGE,
     TITLE_ONLY,
     TEXT,
     GIF,
-    VIDEO
+    VIDEO,
+    NEWS
 }

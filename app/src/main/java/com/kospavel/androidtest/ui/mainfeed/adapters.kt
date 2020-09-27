@@ -1,5 +1,6 @@
 package com.kospavel.androidtest.ui.mainfeed
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -8,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import com.kospavel.androidtest.R
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_author_view.*
+import kotlinx.android.synthetic.main.item_image_view.*
 import kotlinx.android.synthetic.main.item_post_title_view.*
 import kotlinx.android.synthetic.main.item_post_view.view.*
 
@@ -53,7 +56,8 @@ class FeedAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             2 -> {
                 val listAdapter = ListDelegationAdapter(
                     titleAdapterDelegate(),
-                    authorAdapterDelegate()
+                    authorAdapterDelegate(),
+                    imageAdapterDelegate()
                 )
                 val post = items[position] as BasePost
                 holder.itemView.card_recycler_view.apply {
@@ -86,3 +90,10 @@ fun authorAdapterDelegate() =
             author.text = item.author
         }
     }
+
+fun imageAdapterDelegate() = adapterDelegateLayoutContainer<Image, Any>(R.layout.item_image_view) {
+    bind {
+        Log.i("qwerty", "image url: ${item.downloadUrl}")
+        Picasso.get().load(item.downloadUrl).into(image)
+    }
+}

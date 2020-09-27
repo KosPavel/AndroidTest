@@ -6,10 +6,11 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.Target
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import com.kospavel.androidtest.R
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_author_view.*
 import kotlinx.android.synthetic.main.item_image_view.*
 import kotlinx.android.synthetic.main.item_post_title_view.*
@@ -57,7 +58,8 @@ class FeedAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 val listAdapter = ListDelegationAdapter(
                     titleAdapterDelegate(),
                     authorAdapterDelegate(),
-                    imageAdapterDelegate()
+                    imageAdapterDelegate(),
+                    gifAdapterDelegate()
                 )
                 val post = items[position] as BasePost
                 holder.itemView.card_recycler_view.apply {
@@ -94,6 +96,24 @@ fun authorAdapterDelegate() =
 fun imageAdapterDelegate() = adapterDelegateLayoutContainer<Image, Any>(R.layout.item_image_view) {
     bind {
         Log.i("qwerty", "image url: ${item.downloadUrl}")
-        Picasso.get().load(item.downloadUrl).into(image)
+//        Picasso.get().load(item.downloadUrl).into(image)
+        Glide
+            .with(context)
+            .load(item.downloadUrl)
+            .override(Target.SIZE_ORIGINAL)
+            .into(image)
+    }
+}
+
+fun gifAdapterDelegate() = adapterDelegateLayoutContainer<Gif, Any>(R.layout.item_image_view) {
+    bind {
+        Log.i("qwerty", "gif url: ${item.downloadUrl}")
+//        Picasso.get().load(item.downloadUrl).into(image)
+        Glide
+            .with(context)
+            .asGif()
+            .load(item.downloadUrl)
+            .override(Target.SIZE_ORIGINAL)
+            .into(image)
     }
 }

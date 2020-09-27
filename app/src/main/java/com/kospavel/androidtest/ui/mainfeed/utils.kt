@@ -11,6 +11,7 @@ class NoPosts
 data class Title(val title: String)
 data class Author(val author: String)
 data class Image(val downloadUrl: String)
+data class Gif(val downloadUrl: String)
 
 abstract class BasePost(
 ) {

@@ -16,8 +16,8 @@ class PostBuilder {
                 PostType.IMAGE -> {
                     items.add(Image(rawPostData.url))
                 }
-                PostType.TITLE_ONLY -> {
-
+                PostType.GIF -> {
+                    items.add(Gif(rawPostData.url))
                 }
                 else -> {
 
@@ -31,7 +31,7 @@ class PostBuilder {
                 isImage(rawPostData) -> {
                     PostType.IMAGE
                 }
-                rawPostData.url.contains("gif") -> {
+                isGif(rawPostData) -> {
                     PostType.GIF
                 }
                 else -> {
@@ -42,8 +42,15 @@ class PostBuilder {
 
         private fun isImage(rawPostData: RawPostData): Boolean {
             return rawPostData.url.let {
-                it.contains("i.redd.it") && !it.contains(".gif")
+                it.contains("i.redd.it", ignoreCase = true) && !it.contains(
+                    ".gif",
+                    ignoreCase = true
+                )
             }
+        }
+
+        private fun isGif(rawPostData: RawPostData): Boolean {
+            return rawPostData.url.contains(".gif", ignoreCase = true)
         }
 
     }

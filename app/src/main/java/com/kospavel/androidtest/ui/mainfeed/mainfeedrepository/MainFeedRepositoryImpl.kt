@@ -2,8 +2,8 @@ package com.kospavel.androidtest.ui.mainfeed.mainfeedrepository
 
 import com.google.gson.GsonBuilder
 import com.kospavel.androidtest.ui.mainfeed.RawPostData
+import com.kospavel.androidtest.ui.mainfeed.Subreddit
 import com.kospavel.androidtest.ui.mainfeed.mainfeedrepository.api.MainFeedApi
-import com.kospavel.androidtest.ui.mainfeed.mainfeedrepository.api.model.SubredditInfoResponse
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import retrofit2.Retrofit
@@ -38,6 +38,9 @@ class MainFeedRepositoryImpl : MainFeedRepository {
             .map<MainFeedResponseStatus> {
                 val list = mutableListOf<RawPostData>()
                 for (children in it.data.children) {
+//                    getSubredditInfo(children.data.subreddit).map {
+//                        it
+//                    }.subscribe()
                     list.add(
                         RawPostData(
                             author = children.data.author,
@@ -54,7 +57,14 @@ class MainFeedRepositoryImpl : MainFeedRepository {
             }
     }
 
-    private fun getSubredditInfo() : Observable<SubredditInfoResponse> {
-        return
+    private fun getSubredditInfo(subreddit: String): Observable<Subreddit> {
+        return mainFeedApi.subredditInfo(subreddit)
+            .subscribeOn(Schedulers.io())
+            .map<Subreddit> {
+                Subreddit(
+                    it.data.name,
+                    it.data.icon_img
+                )
+            }
     }
 }

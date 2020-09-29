@@ -28,12 +28,12 @@ class MainFeedFragment : Fragment(R.layout.fragment_main_feed) {
             uiStructure.observeForever {
                 feedAdapter.items = it
                 feedAdapter.notifyDataSetChanged()
-                swipe_container.isRefreshing = false
             }
         }
 
         swipe_container.setOnRefreshListener {
             vm.reloadFeed()
+            swipe_container.isRefreshing = false
         }
     }
 }

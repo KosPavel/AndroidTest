@@ -3,6 +3,7 @@ package com.kospavel.androidtest.ui.mainfeed.mainfeedrepository
 import com.google.gson.GsonBuilder
 import com.kospavel.androidtest.ui.mainfeed.RawPostData
 import com.kospavel.androidtest.ui.mainfeed.mainfeedrepository.api.MainFeedApi
+import com.kospavel.androidtest.ui.mainfeed.mainfeedrepository.api.model.SubredditInfoResponse
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import retrofit2.Retrofit
@@ -13,6 +14,15 @@ import retrofit2.create
 class MainFeedRepositoryImpl : MainFeedRepository {
 
     private val mainFeedApi = Retrofit.Builder().baseUrl("https://www.reddit.com/")
+        .addConverterFactory(
+            GsonConverterFactory.create(
+                GsonBuilder().create()
+            )
+        )
+        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+        .build().create<MainFeedApi>()
+
+    private val subredditInfoApi = Retrofit.Builder().baseUrl("https://www.reddit.com/")
         .addConverterFactory(
             GsonConverterFactory.create(
                 GsonBuilder().create()
@@ -32,7 +42,8 @@ class MainFeedRepositoryImpl : MainFeedRepository {
                         RawPostData(
                             author = children.data.author,
                             title = children.data.title,
-                            url = children.data.url
+                            url = children.data.url,
+                            subreddit = children.data.subreddit
                         )
                     )
                 }
@@ -41,5 +52,9 @@ class MainFeedRepositoryImpl : MainFeedRepository {
             .onErrorReturn {
                 MainFeedResponseStatus.Error(it)
             }
+    }
+
+    private fun getSubredditInfo() : Observable<SubredditInfoResponse> {
+        return
     }
 }

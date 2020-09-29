@@ -7,6 +7,7 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.request.target.Target
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
@@ -114,6 +115,7 @@ fun gifAdapterDelegate() = adapterDelegateLayoutContainer<Gif, Any>(R.layout.ite
             .asGif()
             .load(item.downloadUrl)
             .override(Target.SIZE_ORIGINAL)
+            .fitCenter()
             .into(image)
     }
 }

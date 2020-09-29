@@ -50,7 +50,12 @@ class PostBuilder {
         }
 
         private fun isGif(rawPostData: RawPostData): Boolean {
-            return rawPostData.url.contains(".gif", ignoreCase = true)
+            return rawPostData.url.let {
+                it.contains("i.redd.it", ignoreCase = true) && it.contains(
+                    ".gif",
+                    ignoreCase = true
+                )
+            }
         }
 
     }

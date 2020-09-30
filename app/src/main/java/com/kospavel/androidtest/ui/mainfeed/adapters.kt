@@ -7,7 +7,6 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.request.target.Target
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
@@ -16,6 +15,7 @@ import kotlinx.android.synthetic.main.item_author_view.*
 import kotlinx.android.synthetic.main.item_image_view.*
 import kotlinx.android.synthetic.main.item_post_title_view.*
 import kotlinx.android.synthetic.main.item_post_view.view.*
+import kotlinx.android.synthetic.main.item_subreddit_view.*
 
 class FeedAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -60,7 +60,8 @@ class FeedAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     titleAdapterDelegate(),
                     authorAdapterDelegate(),
                     imageAdapterDelegate(),
-                    gifAdapterDelegate()
+                    gifAdapterDelegate(),
+                    subredditAdapterDelegate()
                 )
                 val post = items[position] as BasePost
                 holder.itemView.card_recycler_view.apply {
@@ -119,3 +120,14 @@ fun gifAdapterDelegate() = adapterDelegateLayoutContainer<Gif, Any>(R.layout.ite
             .into(image)
     }
 }
+
+fun subredditAdapterDelegate() =
+    adapterDelegateLayoutContainer<Subreddit, Any>(R.layout.item_subreddit_view) {
+        bind {
+            Glide
+                .with(context)
+                .load(item.logoUrl)
+                .into(subreddit_logo)
+            subreddit_name.text = item.name
+        }
+    }

@@ -11,6 +11,7 @@ class PostBuilder {
             items.apply {
                 add(Title(rawPostData.title))
                 add(Author(rawPostData.author))
+                add(rawPostData.subreddit)
             }
             when (type(rawPostData)) {
                 PostType.IMAGE -> {

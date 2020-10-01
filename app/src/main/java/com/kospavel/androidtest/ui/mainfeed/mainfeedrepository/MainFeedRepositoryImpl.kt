@@ -1,7 +1,6 @@
 package com.kospavel.androidtest.ui.mainfeed.mainfeedrepository
 
 import com.google.gson.GsonBuilder
-import com.kospavel.androidtest.ui.mainfeed.RawPostData
 import com.kospavel.androidtest.ui.mainfeed.Subreddit
 import com.kospavel.androidtest.ui.mainfeed.mainfeedrepository.api.MainFeedApi
 import io.reactivex.rxjava3.core.Observable
@@ -34,22 +33,11 @@ class MainFeedRepositoryImpl : MainFeedRepository {
         return mainFeedApi.best()
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
-            .flatMap {
-                val items = mutableListOf<RawPostData>()
-                for (children in it.data.children) {
-                    getSubredditInfo(children.data.subreddit).observeOn(Schedulers.computation())
-                        .map { subreddit ->
-                            items.add(
-                                RawPostData(
-                                    author = children.data.author,
-                                    title = children.data.title,
-                                    url = children.data.url,
-                                    subreddit = subreddit
-                                )
-                            )
-                        }
+            .flatMap {mainResponse ->
+                val subreddits : List<Observable<Subreddit>> = mainResponse.data.children.map {it ->
+                    getSubredditInfo(it.data.subreddit)
                 }
-                Observable.just(items) //TODO айтемс улетают до заполнения
+                Observable.combineLatest(mainResponse, subreddits, {  })
             }
             .map<MainFeedResponseStatus> {
                 MainFeedResponseStatus.Ok(it)
@@ -58,6 +46,35 @@ class MainFeedRepositoryImpl : MainFeedRepository {
                 MainFeedResponseStatus.Error(it)
             }
     }
+
+//    override fun getFeed(): Observable<MainFeedResponseStatus> {
+//        return mainFeedApi.best()
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(Schedulers.computation())
+//            .flatMap {
+//                val items = mutableListOf<RawPostData>()
+//                for (children in it.data.children) {
+//                    getSubredditInfo(children.data.subreddit).observeOn(Schedulers.computation())
+//                        .map { subreddit ->
+//                            items.add(
+//                                RawPostData(
+//                                    author = children.data.author,
+//                                    title = children.data.title,
+//                                    url = children.data.url,
+//                                    subreddit = subreddit
+//                                )
+//                            )
+//                        }
+//                }
+//                Observable.just(items) //TODO айтемс улетают до заполнения
+//            }
+//            .map<MainFeedResponseStatus> {
+//                MainFeedResponseStatus.Ok(it)
+//            }
+//            .onErrorReturn {
+//                MainFeedResponseStatus.Error(it)
+//            }
+//    }
 
     private fun getSubredditInfo(subreddit: String): Observable<Subreddit> {
         return mainFeedApi.subredditInfo(subreddit)

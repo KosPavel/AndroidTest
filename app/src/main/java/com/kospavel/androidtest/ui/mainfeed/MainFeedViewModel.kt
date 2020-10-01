@@ -2,14 +2,14 @@ package com.kospavel.androidtest.ui.mainfeed
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.kospavel.androidtest.BaseViewModel
 import com.kospavel.androidtest.ui.mainfeed.mainfeedrepository.MainFeedRepositoryImpl
 import com.kospavel.androidtest.ui.mainfeed.mainfeedrepository.MainFeedResponseStatus
 import com.kospavel.androidtest.ui.mainfeed.mainfeedrepository.PostBuilder
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class MainFeedViewModel : ViewModel() {
+class MainFeedViewModel : BaseViewModel() {
 
     private val mainFeedRepository = MainFeedRepositoryImpl()
     private val _uiStructure = MutableLiveData<List<Any>>(emptyList())
@@ -40,7 +40,7 @@ class MainFeedViewModel : ViewModel() {
             .map {
                 _uiStructure.value = it
             }
-            .subscribe()
+            .subscribe().addToDisposable()
     }
 
     fun reloadFeed() {

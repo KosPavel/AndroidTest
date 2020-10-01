@@ -37,16 +37,17 @@ class MainFeedRepositoryImpl : MainFeedRepository {
             .flatMap {
                 val items = mutableListOf<RawPostData>()
                 for (children in it.data.children) {
-                    getSubredditInfo(children.data.subreddit).map { subreddit ->
-                        items.add(
-                            RawPostData(
-                                author = children.data.author,
-                                title = children.data.title,
-                                url = children.data.url,
-                                subreddit = subreddit
+                    getSubredditInfo(children.data.subreddit).observeOn(Schedulers.computation())
+                        .map { subreddit ->
+                            items.add(
+                                RawPostData(
+                                    author = children.data.author,
+                                    title = children.data.title,
+                                    url = children.data.url,
+                                    subreddit = subreddit
+                                )
                             )
-                        )
-                    }
+                        }
                 }
                 Observable.just(items) //TODO айтемс улетают до заполнения
             }

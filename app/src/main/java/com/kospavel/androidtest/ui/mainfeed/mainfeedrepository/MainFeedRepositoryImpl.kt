@@ -1,6 +1,7 @@
 package com.kospavel.androidtest.ui.mainfeed.mainfeedrepository
 
 import com.google.gson.GsonBuilder
+import com.kospavel.androidtest.ui.mainfeed.RawPostData
 import com.kospavel.androidtest.ui.mainfeed.Subreddit
 import com.kospavel.androidtest.ui.mainfeed.mainfeedrepository.api.MainFeedApi
 import io.reactivex.rxjava3.core.Observable
@@ -37,7 +38,22 @@ class MainFeedRepositoryImpl : MainFeedRepository {
                 val subreddits : List<Observable<Subreddit>> = mainResponse.data.children.map {it ->
                     getSubredditInfo(it.data.subreddit)
                 }
-                Observable.combineLatest(mainResponse, subreddits, {  })
+                Observable.combineLatest<Subreddit, List<RawPostData>>(subreddits) {
+                    val items = mutableListOf<RawPostData>()
+                    for (i in 0..subreddits.size) {
+                        items.add(
+                            RawPostData(
+                                author = mainResponse.data.children[i].data.author,
+                                title = mainResponse.data.children[i].data.title,
+                                url = mainResponse.data.children[i].data.url,
+                                subreddit = subreddits[i].map {
+                                    it
+                                }
+                            )
+                        )
+                    }
+                    items
+                }
             }
             .map<MainFeedResponseStatus> {
                 MainFeedResponseStatus.Ok(it)

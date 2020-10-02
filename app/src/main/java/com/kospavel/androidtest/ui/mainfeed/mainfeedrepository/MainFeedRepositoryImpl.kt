@@ -34,21 +34,19 @@ class MainFeedRepositoryImpl : MainFeedRepository {
         return mainFeedApi.best()
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
-            .flatMap {mainResponse ->
-                val subreddits : List<Observable<Subreddit>> = mainResponse.data.children.map {it ->
+            .flatMap { mainResponse ->
+                val subreddits: List<Observable<Subreddit>> = mainResponse.data.children.map {
                     getSubredditInfo(it.data.subreddit)
                 }
-                Observable.combineLatest<Subreddit, List<RawPostData>>(subreddits) {
+                Observable.combineLatest<Subreddit, List<RawPostData>>(subreddits) { array ->
                     val items = mutableListOf<RawPostData>()
-                    for (i in 0..subreddits.size) {
+                    array.map { it as Subreddit }.forEachIndexed { index, item ->
                         items.add(
                             RawPostData(
-                                author = mainResponse.data.children[i].data.author,
-                                title = mainResponse.data.children[i].data.title,
-                                url = mainResponse.data.children[i].data.url,
-                                subreddit = subreddits[i].map {
-                                    it
-                                }
+                                author = mainResponse.data.children[index].data.author,
+                                title = mainResponse.data.children[index].data.title,
+                                url = mainResponse.data.children[index].data.url,
+                                subreddit = item
                             )
                         )
                     }

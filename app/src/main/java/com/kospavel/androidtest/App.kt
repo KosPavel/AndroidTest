@@ -3,7 +3,6 @@ package com.kospavel.androidtest
 import android.app.Application
 import android.content.Context
 import com.kospavel.androidtest.di.AppComponent
-import com.kospavel.androidtest.di.AppModule
 import com.kospavel.androidtest.di.DaggerAppComponent
 import com.kospavel.androidtest.di.NetworkModule
 

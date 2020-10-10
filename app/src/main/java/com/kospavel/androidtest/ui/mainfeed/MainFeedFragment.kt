@@ -5,7 +5,6 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.kospavel.androidtest.App
 import com.kospavel.androidtest.R
 import kotlinx.android.synthetic.main.fragment_main_feed.*
 import retrofit2.Retrofit
@@ -20,8 +19,6 @@ class MainFeedFragment : Fragment(R.layout.fragment_main_feed) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        App.get(requireContext()).appComponent.inject(this)
 
         val feedAdapter = FeedAdapter()
 

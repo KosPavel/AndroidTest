@@ -6,7 +6,6 @@ import com.kospavel.androidtest.di.AppComponent
 import com.kospavel.androidtest.di.DaggerAppComponent
 
 class App : Application() {
-
     lateinit var appComponent: AppComponent
 
     init {

@@ -61,41 +61,12 @@ class MainFeedRepositoryImpl : MainFeedRepository {
             }
     }
 
-//    override fun getFeed(): Observable<MainFeedResponseStatus> {
-//        return mainFeedApi.best()
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(Schedulers.computation())
-//            .flatMap {
-//                val items = mutableListOf<RawPostData>()
-//                for (children in it.data.children) {
-//                    getSubredditInfo(children.data.subreddit).observeOn(Schedulers.computation())
-//                        .map { subreddit ->
-//                            items.add(
-//                                RawPostData(
-//                                    author = children.data.author,
-//                                    title = children.data.title,
-//                                    url = children.data.url,
-//                                    subreddit = subreddit
-//                                )
-//                            )
-//                        }
-//                }
-//                Observable.just(items) //TODO айтемс улетают до заполнения
-//            }
-//            .map<MainFeedResponseStatus> {
-//                MainFeedResponseStatus.Ok(it)
-//            }
-//            .onErrorReturn {
-//                MainFeedResponseStatus.Error(it)
-//            }
-//    }
-
     private fun getSubredditInfo(subreddit: String): Observable<Subreddit> {
         return mainFeedApi.subredditInfo(subreddit)
             .subscribeOn(Schedulers.io())
             .map<Subreddit> {
                 Subreddit(
-                    it.data.name,
+                    subreddit,
                     it.data.icon_img
                 )
             }

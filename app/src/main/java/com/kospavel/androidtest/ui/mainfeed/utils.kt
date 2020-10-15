@@ -3,7 +3,8 @@ package com.kospavel.androidtest.ui.mainfeed
 data class RawPostData(
     val author: String,
     val title: String,
-    val url: String
+    val url: String,
+    val subreddit: Subreddit
 )
 
 class NoPosts
@@ -12,6 +13,10 @@ data class Title(val title: String)
 data class Author(val author: String)
 data class Image(val downloadUrl: String)
 data class Gif(val downloadUrl: String)
+data class Subreddit(
+    val name: String,
+    val logoUrl: String
+)
 
 abstract class BasePost(
 ) {

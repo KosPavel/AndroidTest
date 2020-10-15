@@ -11,6 +11,7 @@ class PostBuilder {
             items.apply {
                 add(Title(rawPostData.title))
                 add(Author(rawPostData.author))
+                add(rawPostData.subreddit)
             }
             when (type(rawPostData)) {
                 PostType.IMAGE -> {
@@ -50,7 +51,12 @@ class PostBuilder {
         }
 
         private fun isGif(rawPostData: RawPostData): Boolean {
-            return rawPostData.url.contains(".gif", ignoreCase = true)
+            return rawPostData.url.let {
+                it.contains("i.redd.it", ignoreCase = true) && it.contains(
+                    ".gif",
+                    ignoreCase = true
+                )
+            }
         }
 
     }
